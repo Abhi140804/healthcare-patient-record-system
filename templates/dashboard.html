@@ -12,24 +12,24 @@
         </div>
         <div class="header-actions">
             <a href="{{ url_for('add_patient') }}" class="btn btn-primary">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-                Register New Patient
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                <span>Register New Patient</span>
             </a>
             <a href="{{ url_for('list_patients') }}" class="btn btn-secondary">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                Search Records
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                <span>Search Records</span>
             </a>
         </div>
     </div>
 
     <!-- Core Metrics Cards -->
     <div class="stats-grid">
-        <!-- Card 1: Total Patient Records (Core requirement) -->
+        <!-- Card 1: Total Patient Records -->
         <div class="stat-card stat-primary">
             <div class="stat-header">
                 <span class="stat-title">Total Registered Patients</span>
                 <div class="stat-icon-wrapper icon-blue">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 </div>
             </div>
             <div class="stat-value" id="totalPatientsCount">{{ total_patients }}</div>
@@ -39,12 +39,12 @@
             </div>
         </div>
 
-        <!-- Card 2: Gender Distribution Summary -->
+        <!-- Card 2: Demographics -->
         <div class="stat-card">
             <div class="stat-header">
                 <span class="stat-title">Patient Demographics</span>
                 <div class="stat-icon-wrapper icon-teal">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 </div>
             </div>
             <div class="demographics-row">
@@ -66,18 +66,18 @@
             </div>
         </div>
 
-        <!-- Card 3: Cloud & Security Status -->
+        <!-- Card 3: Cloud & Security -->
         <div class="stat-card">
             <div class="stat-header">
                 <span class="stat-title">Cloud Infrastructure Status</span>
                 <div class="stat-icon-wrapper icon-green">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"></path></svg>
                 </div>
             </div>
             <div class="cloud-status-list">
                 <div class="cloud-status-row">
                     <span>Database Engine:</span>
-                    <span class="badge badge-tech">SQLite / Cloud SQL ready</span>
+                    <span class="badge badge-tech">SQLite / AWS RDS Ready</span>
                 </div>
                 <div class="cloud-status-row">
                     <span>Session Security:</span>
@@ -115,27 +115,28 @@
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>Patient ID</th>
-                        <th>Patient Name</th>
-                        <th>Age / Gender</th>
-                        <th>Diagnosis</th>
-                        <th>Attending Doctor</th>
-                        <th>Visit Date</th>
-                        <th class="text-right">Action</th>
+                        <th style="min-width: 130px;">Patient ID</th>
+                        <th style="min-width: 170px;">Patient Name</th>
+                        <th style="min-width: 140px;">Age / Gender</th>
+                        <th style="min-width: 220px;">Diagnosis</th>
+                        <th style="min-width: 160px;">Attending Doctor</th>
+                        <th style="min-width: 120px;">Visit Date</th>
+                        <th class="actions-cell" style="min-width: 100px;">Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for patient in recent_patients %}
                     <tr>
                         <td><span class="patient-id-badge">{{ patient.patient_id }}</span></td>
-                        <td class="font-bold">{{ patient.name }}</td>
-                        <td>{{ patient.age }} yrs &bull; <span class="text-muted">{{ patient.gender }}</span></td>
-                        <td><span class="diagnosis-badge">{{ patient.diagnosis }}</span></td>
-                        <td>{{ patient.doctor_name }}</td>
-                        <td><code>{{ patient.visit_date }}</code></td>
-                        <td class="text-right">
+                        <td class="patient-name-cell"><strong>{{ patient.name }}</strong></td>
+                        <td>{{ patient.age }} yrs &bull; <span class="gender-tag gender-{{ patient.gender|lower }}">{{ patient.gender }}</span></td>
+                        <td><span class="diagnosis-text">{{ patient.diagnosis }}</span></td>
+                        <td><span class="doctor-badge">👨‍⚕️ {{ patient.doctor_name }}</span></td>
+                        <td><span class="date-cell">{{ patient.visit_date }}</span></td>
+                        <td class="actions-cell">
                             <a href="{{ url_for('edit_patient', id=patient.id) }}" class="btn-action btn-edit" title="Edit Record">
-                                Edit
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                <span>Edit</span>
                             </a>
                         </td>
                     </tr>
