@@ -196,16 +196,65 @@ The database automatically initializes upon first run with:
 
 ---
 
-### Option C: Deploy to Render / Railway / AWS App Runner
+### Option C: Deploy to AWS App Runner (Recommended for AWS)
 
-1. Push your repository to GitHub.
-2. Link your repository in Render or Railway as a **Web Service**.
-3. Set the environment variables:
-   - `PYTHON_VERSION`: `3.9.6`
-   - `SECRET_KEY`: `<Generate a random secure string>`
-   - `DATABASE_URL`: *(Connect a Managed PostgreSQL database addon in one click)*
-4. Set Build Command: `pip install -r requirements.txt`
-5. Set Start Command: `gunicorn --bind 0.0.0.0:$PORT --workers 2 app:app`
+**AWS App Runner** is Amazon's fully managed container application service (equivalent to Google Cloud Run). It connects directly to your GitHub repository and automatically deploys using the included `apprunner.yaml`:
+
+1. Open the **[AWS App Runner Console](https://console.aws.amazon.com/apprunner)**.
+2. Click **Create service**.
+3. Under **Repository type**, select **Source code repository**.
+4. Connect your GitHub account and select:
+   - **Repository:** `Abhi140804/healthcare-patient-record-system`
+   - **Branch:** `main`
+5. Under **Deployment trigger**, select **Automatic** (so git pushes trigger new deployments).
+6. Under **Configuration settings**, choose **"Use a configuration file"** (App Runner will automatically detect `apprunner.yaml`).
+7. Click **Next** and **Create & Deploy**.
+8. AWS App Runner will provision the container, route traffic, configure TLS, and output your live application URL (e.g. `https://xxxxxx.us-east-1.awsapprunner.com`).
+
+---
+
+### Option D: Deploy to AWS Elastic Beanstalk
+
+**AWS Elastic Beanstalk** is widely taught in university cloud computing courses. The repository includes `Dockerrun.aws.json` for turn-key deployment:
+
+1. Open the **[AWS Elastic Beanstalk Console](https://console.aws.amazon.com/elasticbeanstalk)**.
+2. Click **Create Application**.
+3. Set **Application Name:** `healthcare-patient-record-system`.
+4. Under **Platform**, select:
+   - **Platform:** `Docker`
+   - **Platform branch:** `Docker running on 64bit Amazon Linux 2`
+5. Under **Application code**, select **Upload your code** and upload a zip containing the repository files (or connect via AWS CodePipeline using `buildspec.yml`).
+6. Click **Create app**. Elastic Beanstalk automatically spins up an EC2 instance, configures an Elastic Load Balancer (ELB), and runs your Docker container.
+
+---
+
+### Option E: Deploy to AWS ECS (Elastic Container Service with Fargate)
+
+For serverless container orchestration:
+1. Build and push your image to **Amazon ECR** (Elastic Container Registry):
+   ```bash
+   aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com
+   docker build -t healthcare-system .
+   docker tag healthcare-system:latest <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/healthcare-system:latest
+   docker push <AWS_ACCOUNT_ID>.dkr.ecr.us-east-1.amazonaws.com/healthcare-system:latest
+   ```
+2. Register the task definition in AWS ECS using the provided `aws-ecs-task-definition.json`:
+   ```bash
+   aws ecs register-task-definition --cli-input-json file://aws-ecs-task-definition.json
+   ```
+3. Create a Fargate Service with an Application Load Balancer targeting container port `5000` and health check `/health`.
+
+---
+
+### Option F: Connecting to Amazon RDS (PostgreSQL Database)
+
+For persistent patient records across container restarts on AWS:
+1. Create a PostgreSQL instance in **Amazon RDS** (Free Tier `db.t4g.micro`).
+2. Set the `DATABASE_URL` environment variable in AWS App Runner, Elastic Beanstalk, or ECS:
+   ```bash
+   DATABASE_URL="postgresql://postgres:<YOUR_RDS_PASSWORD>@<YOUR_RDS_ENDPOINT>:5432/healthcare_db"
+   ```
+3. The Flask application automatically switches from local SQLite to the RDS PostgreSQL database without any code changes!
 
 ---
 

@@ -1,0 +1,22 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo "Logging in to Amazon ECR..."
+      - echo "AWS Region: $AWS_DEFAULT_REGION"
+  build:
+    commands:
+      - echo "Build started on `date`"
+      - echo "Building Docker image..."
+      - docker build -t healthcare-system:latest .
+  post_build:
+    commands:
+      - echo "Build completed on `date`"
+      - printf '[{"name":"healthcare-system","imageUri":"healthcare-system:latest"}]' > imagedefinitions.json
+
+artifacts:
+  files:
+    - imagedefinitions.json
+    - Dockerrun.aws.json
+    - apprunner.yaml
