@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Register New Patient{% endblock %}
+
+{% block content %}
+<div class="form-page-container">
+    <div class="form-card">
+        <div class="form-card-header">
+            <div class="header-icon-box">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" y1="8" x2="20" y2="14"></line><line x1="23" y1="11" x2="17" y2="11"></line></svg>
+            </div>
+            <div>
+                <h2>Register New Patient</h2>
+                <p class="subtitle">Complete patient intake to persist record to cloud database</p>
+            </div>
+        </div>
+
+        <form action="{{ url_for('add_patient') }}" method="POST" class="patient-form" novalidate>
+            <div class="form-grid">
+                <!-- Patient ID -->
+                <div class="form-group">
+                    <label for="patient_id">
+                        Patient ID <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="patient_id" 
+                        name="patient_id" 
+                        class="form-control" 
+                        placeholder="e.g. PAT-2041" 
+                        value="{{ form_data.get('patient_id', '') }}" 
+                        required
+                    >
+                    <small class="field-hint">Unique medical record identifier (alphanumeric or hyphens)</small>
+                </div>
+
+                <!-- Patient Full Name -->
+                <div class="form-group">
+                    <label for="name">
+                        Full Patient Name <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        class="form-control" 
+                        placeholder="e.g. Eleanor Vance" 
+                        value="{{ form_data.get('name', '') }}" 
+                        required
+                    >
+                    <small class="field-hint">Legal patient first and last name</small>
+                </div>
+
+                <!-- Age -->
+                <div class="form-group">
+                    <label for="age">
+                        Age (Years) <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="number" 
+                        id="age" 
+                        name="age" 
+                        class="form-control" 
+                        placeholder="e.g. 42" 
+                        min="0" 
+                        max="130" 
+                        value="{{ form_data.get('age', '') }}" 
+                        required
+                    >
+                    <small class="field-hint">Patient age in years (0 - 130)</small>
+                </div>
+
+                <!-- Gender -->
+                <div class="form-group">
+                    <label for="gender">
+                        Gender <span class="required">*</span>
+                    </label>
+                    <select id="gender" name="gender" class="form-control" required>
+                        <option value="" disabled {% if not form_data.get('gender') %}selected{% endif %}>Select Gender</option>
+                        <option value="Male" {% if form_data.get('gender') == 'Male' %}selected{% endif %}>Male</option>
+                        <option value="Female" {% if form_data.get('gender') == 'Female' %}selected{% endif %}>Female</option>
+                        <option value="Other" {% if form_data.get('gender') == 'Other' %}selected{% endif %}>Other</option>
+                    </select>
+                    <small class="field-hint">Demographic gender identification</small>
+                </div>
+
+                <!-- Diagnosis -->
+                <div class="form-group form-col-span-2">
+                    <label for="diagnosis">
+                        Clinical Diagnosis / Chief Complaint <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="diagnosis" 
+                        name="diagnosis" 
+                        class="form-control" 
+                        placeholder="e.g. Acute Pharyngitis, Type 2 Diabetes Routine Checkup" 
+                        value="{{ form_data.get('diagnosis', '') }}" 
+                        required
+                    >
+                    <small class="field-hint">Primary symptom or confirmed clinical diagnosis</small>
+                </div>
+
+                <!-- Attending Doctor -->
+                <div class="form-group">
+                    <label for="doctor_name">
+                        Attending Doctor <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="doctor_name" 
+                        name="doctor_name" 
+                        class="form-control" 
+                        placeholder="e.g. Dr. Marcus Lee" 
+                        value="{{ form_data.get('doctor_name', '') }}" 
+                        required
+                    >
+                    <small class="field-hint">Physician handling the consultation</small>
+                </div>
+
+                <!-- Visit Date -->
+                <div class="form-group">
+                    <label for="visit_date">
+                        Consultation / Visit Date <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="date" 
+                        id="visit_date" 
+                        name="visit_date" 
+                        class="form-control" 
+                        value="{{ form_data.get('visit_date', '') }}" 
+                        required
+                    >
+                    <small class="field-hint">Date when clinical examination took place</small>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{{ url_for('list_patients') }}" class="btn btn-secondary">
+                    Cancel
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    Save Patient Record
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Default visit date to today if empty
+window.addEventListener('DOMContentLoaded', () => {
+    const visitDateInput = document.getElementById('visit_date');
+    if (visitDateInput && !visitDateInput.value) {
+        const today = new Date().toISOString().split('T')[0];
+        visitDateInput.value = today;
+    }
+});
+</script>
+{% endblock %}

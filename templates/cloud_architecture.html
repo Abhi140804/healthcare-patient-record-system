@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block title %}Cloud Architecture &amp; System Concepts{% endblock %}
+
+{% block content %}
+<div class="cloud-page-container">
+    <div class="page-top-bar">
+        <div>
+            <h1>Cloud Architecture &amp; System Design</h1>
+            <p class="subtitle">Technical Overview for College Evaluation: Healthcare Data Management &amp; Secure Patient Record System</p>
+        </div>
+        <div>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">&larr; Return to Dashboard</a>
+        </div>
+    </div>
+
+    <!-- Architecture Diagram Card -->
+    <div class="card arch-card">
+        <div class="card-header">
+            <h3>Three-Tier Cloud Architecture Diagram</h3>
+            <span class="badge badge-tech">User &rarr; Web Application &rarr; Database</span>
+        </div>
+
+        <div class="diagram-container">
+            <div class="arch-box client-box">
+                <div class="arch-box-icon">💻</div>
+                <h4>1. Client Tier</h4>
+                <p><strong>Hospital Staff Browser</strong></p>
+                <ul>
+                    <li>HTML5 / CSS3 / Vanilla JS</li>
+                    <li>Responsive UI layout</li>
+                    <li>Client-side form validation</li>
+                    <li>Secure Cookie Storage</li>
+                </ul>
+                <div class="arch-tag">Client Device</div>
+            </div>
+
+            <div class="arch-arrow">
+                <span class="arrow-label">HTTPS (Port 443)</span>
+                <span class="arrow-sub">Encrypted TLS Traffic</span>
+                <div class="arrow-line">&rarr;</div>
+            </div>
+
+            <div class="arch-box app-box">
+                <div class="arch-box-icon">☁️</div>
+                <h4>2. Cloud Application Tier</h4>
+                <p><strong>Containerized Flask Service</strong></p>
+                <ul>
+                    <li>Python Flask + Gunicorn WSGI</li>
+                    <li>Docker container packaging</li>
+                    <li>Route authentication (@login_required)</li>
+                    <li>PBKDF2/SHA-256 Password Hashing</li>
+                    <li>Liveness probe endpoint (<code>/health</code>)</li>
+                </ul>
+                <div class="arch-tag">Cloud Run / AWS / Azure</div>
+            </div>
+
+            <div class="arch-arrow">
+                <span class="arrow-label">SQL Queries</span>
+                <span class="arrow-sub">Parameterized ORM</span>
+                <div class="arrow-line">&rarr;</div>
+            </div>
+
+            <div class="arch-box db-box">
+                <div class="arch-box-icon">🗄️</div>
+                <h4>3. Cloud Data Tier</h4>
+                <p><strong>Database Storage</strong></p>
+                <ul>
+                    <li><strong>Dev:</strong> SQLite file (local test)</li>
+                    <li><strong>Prod:</strong> Managed PostgreSQL/MySQL</li>
+                    <li>ACID Transactions</li>
+                    <li>Encrypted at rest (cloud managed)</li>
+                </ul>
+                <div class="arch-tag">Cloud SQL / Amazon RDS</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cloud Concepts Grid -->
+    <div class="cloud-concepts-grid">
+        <div class="concept-card">
+            <div class="concept-icon">📦</div>
+            <h4>Containerization (Docker)</h4>
+            <p>Packages application code, system libraries, and Python dependencies into an immutable container image. This eliminates <em>"works on my machine"</em> bugs and allows identical execution locally and on Google Cloud Run or AWS.</p>
+        </div>
+
+        <div class="concept-card">
+            <div class="concept-icon">🛡️</div>
+            <h4>Security &amp; Confidentiality</h4>
+            <p>Passwords are never stored in plain text; they are hashed with salted PBKDF2/SHA-256. All database operations use parameterized SQLAlchemy statements to mitigate SQL injection.</p>
+        </div>
+
+        <div class="concept-card">
+            <div class="concept-icon">💾</div>
+            <h4>Ephemeral vs. Persistent Storage</h4>
+            <p>Cloud containers are stateless and ephemeral. In local development, SQLite stores data in a file. In cloud production, the app connects to a managed database (like AWS RDS or Google Cloud SQL) via the <code>DATABASE_URL</code> environment variable.</p>
+        </div>
+
+        <div class="concept-card">
+            <div class="concept-icon">⚙️</div>
+            <h4>Environment-Driven Config (12-Factor)</h4>
+            <p>Configuration secrets (such as <code>SECRET_KEY</code> and <code>DATABASE_URL</code>) are injected via environment variables rather than hardcoded in source control, adhering to cloud 12-factor application standards.</p>
+        </div>
+    </div>
+
+    <!-- Live Cloud Health Status Section -->
+    <div class="card cloud-live-card">
+        <div class="card-header">
+            <h3>Live Health Check Probe</h3>
+            <span class="badge badge-success">HTTP 200 OK</span>
+        </div>
+        <p>Cloud platforms use health check probes to monitor container availability and route incoming web traffic:</p>
+        <div class="health-preview">
+            <div class="health-url">
+                <span>GET</span> <code>/health</code>
+            </div>
+            <pre class="json-code"><code>{
+  "status": "healthy",
+  "database": "connected",
+  "record_count": {{ total_patients or 5 }},
+  "timestamp": "2026-10-11T17:30:00Z"
+}</code></pre>
+        </div>
+        <p class="text-muted"><small>Test it in your browser: <a href="{{ url_for('health_check') }}" target="_blank">Open /health JSON endpoint</a></small></p>
+    </div>
+</div>
+{% endblock %}

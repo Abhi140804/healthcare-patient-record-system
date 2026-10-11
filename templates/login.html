@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Hospital Staff Login{% endblock %}
+
+{% block content %}
+<div class="auth-wrapper">
+    <div class="auth-card">
+        <div class="auth-header">
+            <div class="auth-icon-badge">
+                <span class="auth-cross">+</span>
+            </div>
+            <h2>Hospital Staff Portal</h2>
+            <p>Healthcare Data Management &amp; Secure Patient Record System</p>
+        </div>
+
+        <form action="{{ url_for('login', next=request.args.get('next')) }}" method="POST" class="auth-form" autocomplete="off">
+            <div class="form-group">
+                <label for="username">Staff Username</label>
+                <div class="input-with-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    <input type="text" id="username" name="username" class="form-control" placeholder="Enter username (e.g. admin)" value="{{ username or '' }}" required autofocus>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-with-icon">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    <input type="password" id="password" name="password" class="form-control" placeholder="Enter staff password" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">
+                <span>Sign In to System</span>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </button>
+        </form>
+
+        <!-- Evaluation Quick Credentials Helper -->
+        <div class="demo-credentials-card">
+            <div class="demo-cred-header">
+                <span class="badge badge-demo">Evaluation Demo Access</span>
+            </div>
+            <div class="demo-cred-body">
+                <p>Default credentials pre-seeded for testing:</p>
+                <div class="cred-row">
+                    <span class="cred-label">Username:</span>
+                    <code id="demoUser">admin</code>
+                    <button type="button" class="btn-copy-cred" onclick="fillCreds('admin', 'admin123')">Auto-fill</button>
+                </div>
+                <div class="cred-row">
+                    <span class="cred-label">Password:</span>
+                    <code id="demoPass">admin123</code>
+                </div>
+            </div>
+        </div>
+
+        <div class="auth-security-footer">
+            <div class="security-chip">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                <span>Password hashing via Werkzeug (PBKDF2/SHA256)</span>
+            </div>
+            <div class="security-chip">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                <span>HTTP-Only Server Sessions &amp; Parameterized DB Queries</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function fillCreds(u, p) {
+    document.getElementById('username').value = u;
+    document.getElementById('password').value = p;
+}
+</script>
+{% endblock %}

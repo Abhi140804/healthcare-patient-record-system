@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found (404){% endblock %}
+
+{% block content %}
+<div class="error-page-container">
+    <div class="card error-card">
+        <div class="error-code">404</div>
+        <h2>Patient Record Or Page Not Found</h2>
+        <p>The requested page or record could not be located in the hospital management system.</p>
+        <div class="error-actions">
+            <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Return to Dashboard</a>
+            <a href="{{ url_for('list_patients') }}" class="btn btn-secondary">View Patient Records</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

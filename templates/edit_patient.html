@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Patient: {{ patient.name }}{% endblock %}
+
+{% block content %}
+<div class="form-page-container">
+    <div class="form-card">
+        <div class="form-card-header">
+            <div class="header-icon-box icon-edit">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+            </div>
+            <div>
+                <h2>Update Patient Medical Record</h2>
+                <p class="subtitle">Modify details for record: <strong>{{ patient.patient_id }}</strong> ({{ patient.name }})</p>
+            </div>
+        </div>
+
+        <form action="{{ url_for('edit_patient', id=patient.id) }}" method="POST" class="patient-form" novalidate>
+            <div class="form-grid">
+                <!-- Patient ID -->
+                <div class="form-group">
+                    <label for="patient_id">
+                        Patient ID <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="patient_id" 
+                        name="patient_id" 
+                        class="form-control" 
+                        placeholder="e.g. PAT-2041" 
+                        value="{{ form_data.get('patient_id', patient.patient_id) }}" 
+                        required
+                    >
+                    <small class="field-hint">Medical record identifier</small>
+                </div>
+
+                <!-- Patient Full Name -->
+                <div class="form-group">
+                    <label for="name">
+                        Full Patient Name <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="name" 
+                        name="name" 
+                        class="form-control" 
+                        placeholder="e.g. Eleanor Vance" 
+                        value="{{ form_data.get('name', patient.name) }}" 
+                        required
+                    >
+                    <small class="field-hint">Patient legal name</small>
+                </div>
+
+                <!-- Age -->
+                <div class="form-group">
+                    <label for="age">
+                        Age (Years) <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="number" 
+                        id="age" 
+                        name="age" 
+                        class="form-control" 
+                        placeholder="e.g. 42" 
+                        min="0" 
+                        max="130" 
+                        value="{{ form_data.get('age', patient.age) }}" 
+                        required
+                    >
+                    <small class="field-hint">Age in years</small>
+                </div>
+
+                <!-- Gender -->
+                <div class="form-group">
+                    <label for="gender">
+                        Gender <span class="required">*</span>
+                    </label>
+                    {% set selected_gender = form_data.get('gender', patient.gender) %}
+                    <select id="gender" name="gender" class="form-control" required>
+                        <option value="Male" {% if selected_gender == 'Male' %}selected{% endif %}>Male</option>
+                        <option value="Female" {% if selected_gender == 'Female' %}selected{% endif %}>Female</option>
+                        <option value="Other" {% if selected_gender == 'Other' %}selected{% endif %}>Other</option>
+                    </select>
+                    <small class="field-hint">Demographic gender identification</small>
+                </div>
+
+                <!-- Diagnosis -->
+                <div class="form-group form-col-span-2">
+                    <label for="diagnosis">
+                        Clinical Diagnosis / Chief Complaint <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="diagnosis" 
+                        name="diagnosis" 
+                        class="form-control" 
+                        placeholder="e.g. Acute Pharyngitis" 
+                        value="{{ form_data.get('diagnosis', patient.diagnosis) }}" 
+                        required
+                    >
+                    <small class="field-hint">Confirmed diagnosis or updated medical condition</small>
+                </div>
+
+                <!-- Attending Doctor -->
+                <div class="form-group">
+                    <label for="doctor_name">
+                        Attending Doctor <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="text" 
+                        id="doctor_name" 
+                        name="doctor_name" 
+                        class="form-control" 
+                        placeholder="e.g. Dr. Marcus Lee" 
+                        value="{{ form_data.get('doctor_name', patient.doctor_name) }}" 
+                        required
+                    >
+                    <small class="field-hint">Doctor assigned to this patient case</small>
+                </div>
+
+                <!-- Visit Date -->
+                <div class="form-group">
+                    <label for="visit_date">
+                        Consultation / Visit Date <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="date" 
+                        id="visit_date" 
+                        name="visit_date" 
+                        class="form-control" 
+                        value="{{ form_data.get('visit_date', patient.visit_date) }}" 
+                        required
+                    >
+                    <small class="field-hint">Date of patient visit</small>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a href="{{ url_for('list_patients') }}" class="btn btn-secondary">
+                    Cancel
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                    Update Patient Record
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
