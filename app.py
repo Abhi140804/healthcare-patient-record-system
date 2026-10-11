@@ -371,6 +371,7 @@ def internal_error(error):
 
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.environ.get('PORT', 5050))
     debug_mode = os.environ.get('FLASK_DEBUG', 'true').lower() == 'true'
+    print(f"Server starting on http://127.0.0.1:{port}")
     app.run(host='0.0.0.0', port=port, debug=debug_mode)
